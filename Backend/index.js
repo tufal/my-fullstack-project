@@ -1,39 +1,53 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
-const { BrevoClient } = require('@getbrevo/brevo');
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const { BrevoClient } = require("@getbrevo/brevo");
 
 // Models
-const User = require('./model/user');
-const Contact = require('./model/contact');
-const Product = require('./model/product');
-const Cart = require('./model/cart');
+const User = require("./model/user");
+const Contact = require("./model/contact");
+const Product = require("./model/product");
+const Cart = require("./model/cart");
 
 // Middlewares & Utilities
-const auth = require('./middleware/auth');
-const isAdmin = require('./middleware/admin');
-const Apierror = require('./utill/Apper');
+const auth = require("./middleware/auth");
+const isAdmin = require("./middleware/admin");
+const Apierror = require("./utill/Apper");
 
 const app = express();
-const port = 3000;
-require("dotenv").config();
+
+const port = process.env.PORT || 3000;
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-}));
 
+app.use(
+    cors({
+        origin: process.env.FRONTEND_URL,
+        credentials: true,
+    })
+);
+
+// Brevo
 const brevo = new BrevoClient({
     apiKey: process.env.BREVO_API_KEY,
 });
 
-mongoose.connect("mongodb://localhost:27017/myn")
-    .then(() => console.log("MongoDB connected"))
-    .catch((error) => console.error("MongoDB connection error:", error));
+// MongoDB Atlas
+mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+        console.log("MongoDB Atlas connected");
+    })
+    .catch((error) => {
+        console.error("MongoDB connection error:", error);
+    });
 
 app.get('/', (req, res) => {
     res.json({
