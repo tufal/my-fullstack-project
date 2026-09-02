@@ -33,7 +33,7 @@ app.use(
         credentials: true,
     })
 );
-
+console.log("CORS configured for:", process.env.FRONTEND_URL);
 // Brevo
 const brevo = new BrevoClient({
     apiKey: process.env.BREVO_API_KEY,
