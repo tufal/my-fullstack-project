@@ -1,0 +1,329 @@
+.containt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+
+    width: 100%;
+    max-width: 600px;
+    margin: 60px auto;
+
+    padding: 40px;
+    background: #080808;
+    color: #fff;
+
+    border: 1px solid #292929;
+    border-radius: 20px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+.containt h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+
+
+.containt label {
+    color: #f1f1f1;
+    font-weight: 500;
+}
+
+/* All inputs */
+
+.containt input[type="text"],
+.containt input[type="email"],
+.containt input[type="password"],
+.containt input[type="tel"] {
+    width: 100%;
+    padding: 12px 14px;
+
+    background: #151515;
+    color: #fff;
+
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+
+    outline: none;
+    box-sizing: border-box;
+
+    transition: all 0.3s ease;
+}
+
+.containt input::placeholder {
+    color: #8b8b8b;
+}
+
+.containt input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Help text */
+
+.containt .form-text {
+    color: #8d8d8d;
+    font-size: 13px;
+}
+
+
+
+
+.product-section {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+
+/* Product heading */
+
+.product-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    
+}
+
+.product-heading h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #102d4f;
+}
+
+.product-heading p {
+    margin: 0;
+    max-width: 620px;
+
+    color: #57637d;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-card {
+   display:flex;
+   flex-wrap: wrap;
+   flex-direction: row;
+   justify-content: center;
+
+    gap: 25px;
+    margin: 40px auto;
+}
+
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.card5 {
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #fff;
+    border-radius: 15px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.card5:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+
+
+.card5 img {
+    display: block;
+
+  height: 275px;
+
+
+    transition: transform 0.4s ease;
+}
+
+.card5:hover img {
+    transform: scale(1.05);
+}
+
+
+
+
+.textm {
+    color: #a7addd;
+    line-height: 1.8;
+
+    border-bottom: 5px solid #8f94b1;
+
+    padding-bottom: 10px;
+}
+
+
+
+
+.card8 {
+    display: flex;
+    flex-direction: column;
+
+    width: fit-content;
+    height: fit-content;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    border-radius: 15px;
+
+    box-shadow:
+        5px 5px 10px rgba(0, 0, 0, 0.25);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.card8:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        10px 15px 25px rgba(0, 0, 0, 0.35);
+}
+
+
+
+
+
+
+.xt {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    justify-content: space-between;
+
+    gap: 40px;
+}
+
+
+.mye {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    padding: 30px;
+}
+
+.p {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+button {
+    border: none;
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+
+
+@media (max-width: 992px) {
+
+    .product-card {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+
+
+@media (max-width: 768px) {
+
+    .product-card {
+        grid-template-columns: 1fr;
+    }
+
+    .product-heading h2 {
+        font-size: 28px;
+    }
+
+    .containt {
+        margin-top: 40px;
+        padding: 30px;
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+    .product-section {
+        padding: 15px;
+    }
+
+    .product-heading h2 {
+        font-size: 24px;
+    }
+
+    .card5 img {
+        height: 180px;
+    }
+
+    .containt {
+        width: 100%;
+
+        margin-top: 30px;
+
+        padding: 25px 18px;
+
+        border-radius: 15px;
+    }
+
+    .containt h1 {
+        font-size: 26px;
+    }
+
+    .mye {
+        padding: 15px;
+    }
+
+    .xt {
+        gap: 20px;
+        justify-content: center;
+    }
+
+}
