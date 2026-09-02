@@ -12,7 +12,7 @@ import Logout from '../pages/Logout';
 import Admin from '../admin/Admin';
 import ProtectedAdmin from '../admin/ProtectedAdmin';
 import Cart from '../pages/Cart';
-import Forget from '../components/forget';
+import Forget from '../components/Forget';
 import Reset from '../components/Reset';
 
 
