@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import My from './My'
-import Router from './routes/Router'
+import Router from './routes/RouterTest'
 
 function App() {
   const [cartItems, setCartItems] = useState([])
