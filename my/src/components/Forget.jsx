@@ -13,7 +13,7 @@ const Forget = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/forgotpassword",
+                "https://my-backend-l1tz.onrender.com/forgotpassword",
                 {
                     email: email
                 },

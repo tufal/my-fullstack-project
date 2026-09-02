@@ -10,7 +10,7 @@ const About = () => {
 
   const fetchProducts = async () => {
     try {
-      const rs = await axios.get("http://localhost:3000/products");
+      const rs = await axios.get("https://my-backend-l1tz.onrender.com/products");
       setProducts(rs.data.products);
       setLoading(false);
       setError(false);

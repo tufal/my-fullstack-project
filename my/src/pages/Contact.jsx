@@ -19,7 +19,7 @@ const Contact = () => {
         console.log({ email, phone })
 
         try {
-            const res = await axios.post("http://localhost:3000/contact", { email, phone })
+            const res = await axios.post("https://my-backend-l1tz.onrender.com/contact", { email, phone })
             console.log(res)
             setEmail("")
             setPhone("")

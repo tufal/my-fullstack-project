@@ -7,7 +7,7 @@ const ProtectedAdmin = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/profile", {
+        axios.get("https://my-backend-l1tz.onrender.com/profile", {
             withCredentials: true
         })
         .then((res) => {

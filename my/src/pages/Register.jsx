@@ -28,7 +28,7 @@ localStorage.setItem("email", Form.Email);
     console.log({ Name: Form.Name, Email: Form.Email, Password: Form.Password });
     
       try {
-            const res = await axios.post("http://localhost:3000/register", { email: Form.Email, name: Form.Name, password: Form.Password });
+            const res = await axios.post("https://my-backend-l1tz.onrender.com/register", { email: Form.Email, name: Form.Name, password: Form.Password });
             console.log(res);
         } catch (err) {
             console.log(err);

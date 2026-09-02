@@ -16,7 +16,7 @@ const Shop = () => {
       setError(false);
 
       const response = await axios.get(
-        "http://localhost:3000/products"
+        "https://my-backend-l1tz.onrender.com/products"
       );
 
       setProducts(response.data.products);
@@ -35,7 +35,7 @@ const Shop = () => {
   const addToCart = async (productId) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/cartadd",
+        "https://my-backend-l1tz.onrender.com/cartadd",
         { productId },
         {
           withCredentials: true,

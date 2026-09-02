@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const checkUser = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/profile', {
+      const res = await axios.get('https://my-backend-l1tz.onrender.com/profile', {
         withCredentials: true,
       });
 
@@ -34,7 +34,7 @@ const Navbar = () => {
   const onLogout = async () => {
     try {
       await axios.post(
-        'http://localhost:3000/logout',
+        'https://my-backend-l1tz.onrender.com/logout',
         {},
         { withCredentials: true }
       );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Admin.css";
 
-const API = "http://localhost:3000";
+const API = "https://my-backend-l1tz.onrender.com";
 
 const emptyForm = {
   title: "",

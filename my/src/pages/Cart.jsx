@@ -11,7 +11,7 @@ const Cart = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/cartshow", {
+      const res = await axios.get("https://my-backend-l1tz.onrender.com/cartshow", {
         withCredentials: true,
       });
 
@@ -30,7 +30,7 @@ const Cart = () => {
   const removeFromCart = async (cartId) => {
     try {
       await axios.delete(
-        `http://localhost:3000/cartremove/${cartId}`,
+        `https://my-backend-l1tz.onrender.com/cartremove/${cartId}`,
         {
           withCredentials: true,
         }
@@ -46,7 +46,7 @@ const Cart = () => {
   const addQuantity = async (productId) => {
     try {
       await axios.post(
-        "http://localhost:3000/cartadd",
+        "https://my-backend-l1tz.onrender.com/cartadd",
         { productId },
         {
           withCredentials: true,
@@ -63,7 +63,7 @@ const Cart = () => {
   const decreaseQuantity = async (productId) => {
     try {
       await axios.post(
-        "http://localhost:3000/cartdecrease",
+        "https://my-backend-l1tz.onrender.com/cartdecrease",
         { productId },
         {
           withCredentials: true,
