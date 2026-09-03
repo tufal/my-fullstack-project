@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,12 +27,16 @@ const Login = () => {
         password: form.password
     },
     {
-        withCredentials: true
+        withCredentials: true 
     }
     
 );
 
       alert(res.data.message || "Login successful");
+
+      if (res.data.token) {
+        localStorage.setItem("authToken", res.data.token);
+      }
 
    
 

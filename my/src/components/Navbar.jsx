@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const API_URL = "https://my-backend-l1tz.onrender.com";
 
@@ -11,13 +11,16 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const checkUser = useCallback(async () => {
     try {
       console.log("CHECK USER CALLED");
 
+      const token = localStorage.getItem("authToken");
       const res = await axios.get(`${API_URL}/profile`, {
         withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       console.log("PROFILE RESPONSE:", res.data);
@@ -36,12 +39,13 @@ const Navbar = () => {
       setUser(null);
       setIsAuthenticated(false);
       setIsAdmin(false);
+      localStorage.removeItem("authToken");
     }
   }, []);
 
   useEffect(() => {
     checkUser();
-  }, [checkUser]);
+  }, [checkUser, location.pathname]);
 
   const onRegister = () => {
     navigate("/Register");

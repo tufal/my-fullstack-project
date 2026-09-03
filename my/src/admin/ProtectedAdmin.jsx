@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 
@@ -8,7 +8,10 @@ const ProtectedAdmin = ({ children }) => {
 
     useEffect(() => {
         axios.get("https://my-backend-l1tz.onrender.com/profile", {
-            withCredentials: true
+            withCredentials: true,
+            headers: localStorage.getItem("authToken")
+                ? { Authorization: `Bearer ${localStorage.getItem("authToken")}` }
+                : undefined
         })
         .then((res) => {
             if (res.data.user.role === "admin") {

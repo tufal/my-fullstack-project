@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
     res.json({
         message: 'Backend is running',
         status: 'OK'
-    });z9
+    });
 });
 
 // Contact Route
@@ -191,11 +191,10 @@ app.get("/profile", auth, async (req, res, next) => {
 
 // Logout Route
 app.post("/logout", (req, res) => {
-    const isProduction = process.env.NODE_ENV === "production" || true;
     res.clearCookie("token", {
         httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax"
+        secure: true,
+        sameSite: "none"
     });
 
     return res.status(200).json({

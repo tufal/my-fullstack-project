@@ -6,9 +6,8 @@ const auth = (req, res, next) => {
     console.log("COOKIES:", req.cookies);
     console.log("TOKEN:", req.cookies?.token);
 
-    const token =
-      req.cookies?.token ||
-      req.header("Authorization")?.replace("Bearer ", "");
+    const authorization = req.header("Authorization");
+    const token = authorization?.replace(/^Bearer\s+/i, "") || req.cookies?.token;
 
     if (!token) {
       return res.status(401).json({
@@ -16,10 +15,11 @@ const auth = (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: "JWT_SECRET is not configured" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     console.log("DECODED USER:", decoded);
 
