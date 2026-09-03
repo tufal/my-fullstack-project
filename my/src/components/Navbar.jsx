@@ -1,57 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+
+const API_URL = "https://my-backend-l1tz.onrender.com";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+
   const navigate = useNavigate();
 
-  const checkUser = async () => {
+  const checkUser = useCallback(async () => {
     try {
-      const res = await axios.get('https://my-backend-l1tz.onrender.com/profile', {
+      console.log("CHECK USER CALLED");
+
+      const res = await axios.get(`${API_URL}/profile`, {
         withCredentials: true,
       });
 
+      console.log("PROFILE RESPONSE:", res.data);
+
       setUser(res.data.user);
       setIsAuthenticated(true);
-      setIsAdmin(res.data.admin);
+      setIsAdmin(res.data.admin === true);
+
     } catch (err) {
+      console.log(
+        "PROFILE ERROR:",
+        err.response?.status,
+        err.response?.data
+      );
+
       setUser(null);
       setIsAuthenticated(false);
       setIsAdmin(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkUser();
-  }, []);
+  }, [checkUser]);
 
-  const onRegister = () => navigate('/Register');
-  const onLogin = () => navigate('/Login');
+  const onRegister = () => {
+    navigate("/Register");
+  };
+
+  const onLogin = () => {
+    navigate("/Login");
+  };
 
   const onLogout = async () => {
     try {
       await axios.post(
-        'https://my-backend-l1tz.onrender.com/logout',
+        `${API_URL}/logout`,
         {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
     } catch (err) {
-      console.error('Logout error', err);
-    }
+      console.error("Logout error:", err);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+      setIsAdmin(false);
 
-    setUser(null);
-    setIsAuthenticated(false);
-    setIsAdmin(false);
-    navigate('/Login');
+      navigate("/Login");
+    }
   };
 
   return (
     <nav className="navbar navbar-dark bg-primary navbar-expand-lg py-2">
       <div className="container-fluid px-4 px-lg-5">
-       
+
+        {/* Logo */}
         <Link
           to="/"
           className="navbar-brand d-flex align-items-center me-4 me-lg-5 text-decoration-none"
@@ -65,6 +89,7 @@ const Navbar = () => {
             className="me-2"
           >
             <rect width="100" height="100" rx="22" fill="#0b1329" />
+
             <path
               d="M22 28H54M38 28V72"
               stroke="#38BDF8"
@@ -72,6 +97,7 @@ const Navbar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
+
             <path
               d="M46 72V40L62 58L78 40V72"
               stroke="#FFFFFF"
@@ -80,12 +106,16 @@ const Navbar = () => {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="fw-bold tracking-tight text-white fs-5">
-            TUFEL<span className="text-info fw-semibold ms-2">MANSURI</span>
+
+          <span className="fw-bold text-white fs-5">
+            TUFEL
+            <span className="text-info fw-semibold ms-2">
+              MANSURI
+            </span>
           </span>
         </Link>
 
-  
+        {/* Mobile Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -98,53 +128,72 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav align-items-lg-center nav-underline me-auto gap-3 gap-lg-4 mb-3 mb-lg-0"style={{ marginLeft: "5rem" }}>
+
+          {/* Navigation */}
+          <ul
+            className="navbar-nav align-items-lg-center nav-underline me-auto gap-3 gap-lg-4 mb-3 mb-lg-0"
+            style={{ marginLeft: "5rem" }}
+          >
             <li className="nav-item fs-5">
-              <Link to="/" className="nav-link active" aria-current="page">
+              <Link to="/" className="nav-link">
                 Home
               </Link>
             </li>
+
             <li className="nav-item fs-5">
               <Link to="/about" className="nav-link">
                 About
               </Link>
             </li>
+
             <li className="nav-item fs-5">
               <Link to="/contact" className="nav-link">
                 Contact
               </Link>
             </li>
+
             <li className="nav-item fs-5">
               <Link to="/Shop" className="nav-link">
                 Shop
               </Link>
             </li>
+
             <li className="nav-item fs-5">
               <Link to="/Cart" className="nav-link">
                 Cart
               </Link>
             </li>
 
+            {/* Admin Panel */}
             {isAdmin && (
               <li className="nav-item fs-5">
-                <Link to="/Admin" className="nav-link text-warning fw-semibold">
+                <Link
+                  to="/Admin"
+                  className="nav-link text-warning fw-semibold"
+                >
                   Admin Panel
                 </Link>
               </li>
             )}
           </ul>
 
-          {/* Right Auth Buttons */}
+          {/* Authentication */}
           <div className="d-flex align-items-center gap-2">
+
             {isAuthenticated ? (
-              <button
-                onClick={onLogout}
-                className="btn btn-light fw-medium px-3"
-              >
-                Logout
-              </button>
+              <>
+                <span className="text-white fw-medium me-2">
+                  {user?.name}
+                </span>
+
+                <button
+                  onClick={onLogout}
+                  className="btn btn-light fw-medium px-3"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <button
@@ -153,14 +202,16 @@ const Navbar = () => {
                 >
                   Register
                 </button>
+
                 <button
                   onClick={onLogin}
-                  className="btn btn-light fw-medium px-3 ms-2"
+                  className="btn btn-light fw-medium px-3"
                 >
                   Login
                 </button>
               </>
             )}
+
           </div>
         </div>
       </div>
@@ -169,3 +220,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
