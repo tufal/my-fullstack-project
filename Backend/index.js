@@ -105,7 +105,7 @@ app.post("/register", async (req, res, next) => {
 });
 
 // Login Route
-app.post("/login", async (req, res, next) => {
+app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -146,7 +146,7 @@ app.post("/login", async (req, res, next) => {
                 role: user.role
             }
         });
-    } } catch (error) {
+    } catch (error) {
         console.error("🔥 ACTUAL LOGIN ERROR:", error); // यह Render logs में असली गलती दिखाएगा
         return res.status(error.statusCode || 500).json({
             success: false,
