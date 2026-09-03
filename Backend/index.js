@@ -20,39 +20,43 @@ const isAdmin = require("./middleware/admin");
 const Apierror = require("./utill/Apper");
 
 const app = express();
-
 const port = process.env.PORT || 3000;
 
-// Middleware
+// Body Parsers
 app.use(express.json());
 app.use(cookieParser());
 
+// CORS Configuration (स्लैश हटाकर साफ़ ऑरिजिन मैचिंग)
+const frontendOrigin = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "*";
+
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: frontendOrigin,
         credentials: true,
     })
 );
-console.log("CORS configured for:", process.env.FRONTEND_URL);
-// Brevo
+console.log("CORS configured for:", frontendOrigin);
+
+// Brevo Client
 const brevo = new BrevoClient({
     apiKey: process.env.BREVO_API_KEY,
 });
 
-// MongoDB Atlas
+// MongoDB Atlas Connection
 mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => {
-        console.log("MongoDB Atlas connected");
+        console.log("MongoDB Atlas connected successfully");
     })
     .catch((error) => {
         console.error("MongoDB connection error:", error);
     });
 
+// Health Check Route
 app.get('/', (req, res) => {
     res.json({
-        message: 'Hello World',
-        greeting: 'hii tufel'
+        message: 'Backend is running',
+        status: 'OK'
     });
 });
 
@@ -65,7 +69,7 @@ app.post('/contact', async (req, res, next) => {
         }
 
         const contact = await Contact.create({ email, phone });
-        res.status(200).json({
+        return res.status(200).json({
             message: "Successfully submitted",
             contact
         });
@@ -95,9 +99,14 @@ app.post("/register", async (req, res, next) => {
             password: hashPassword
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "User Registered Successfully",
-            user
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
     } catch (error) {
         next(error);
@@ -105,7 +114,7 @@ app.post("/register", async (req, res, next) => {
 });
 
 // Login Route
-app.post("/login", async (req, res) => {
+app.post("/login", async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
@@ -113,7 +122,8 @@ app.post("/login", async (req, res) => {
             throw new Apierror("Please fill all fields", 400);
         }
 
-        const user = await User.findOne({ email }).lean();
+        // Schema में select: false होने की स्थिति में password साफ़ फ़ेच हो
+        const user = await User.findOne({ email }).select("+password").lean();
         if (!user) {
             throw new Apierror("Invalid Email or Password", 400);
         }
@@ -123,16 +133,19 @@ app.post("/login", async (req, res) => {
             throw new Apierror("Invalid Email or Password", 400);
         }
 
+        const jwtSecret = process.env.JWT_SECRET || "secretkey";
         const token = jwt.sign(
             { id: user._id, role: user.role },
-            "secretkey",
+            jwtSecret,
             { expiresIn: "1h" }
         );
 
+        // Cross-domain (Render to Vercel) के लिए सही कुकी सेटिंग्स
+        const isProduction = process.env.NODE_ENV === "production" || true;
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "strict",
+            secure: isProduction,
+            sameSite: isProduction ? "none" : "lax",
             maxAge: 3600000
         });
 
@@ -147,11 +160,7 @@ app.post("/login", async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("🔥 ACTUAL LOGIN ERROR:", error); // यह Render logs में असली गलती दिखाएगा
-        return res.status(error.statusCode || 500).json({
-            success: false,
-            message: error.message || "Internal Server Error"
-        });
+        next(error);
     }
 });
 
@@ -163,7 +172,7 @@ app.get("/profile", auth, async (req, res, next) => {
             throw new Apierror("User not found", 404);
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             user: user,
             admin: user.role === 'admin'
         });
@@ -174,13 +183,14 @@ app.get("/profile", auth, async (req, res, next) => {
 
 // Logout Route
 app.post("/logout", (req, res) => {
+    const isProduction = process.env.NODE_ENV === "production" || true;
     res.clearCookie("token", {
         httpOnly: true,
-        secure: false,
-        sameSite: "strict"
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax"
     });
 
-    res.status(200).json({
+    return res.status(200).json({
         message: "Logout Successful"
     });
 });
@@ -227,14 +237,11 @@ app.get("/products", async (req, res, next) => {
 app.put("/admin/products/:id", auth, isAdmin, async (req, res, next) => {
     try {
         const { title, description, price, image, category, stock } = req.body;
-        const product = await Product.findByIdAndUpdate(req.params.id, {
-            title,
-            description,
-            price,
-            image,
-            category,
-            stock
-        }, { new: true });
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            { title, description, price, image, category, stock },
+            { new: true }
+        );
 
         if (!product) {
             throw new Apierror("Product not found", 404);
@@ -383,13 +390,15 @@ app.post("/forgotpassword", async (req, res, next) => {
             throw new Apierror("User not found with this email", 404);
         }
 
+        const jwtSecret = process.env.JWT_SECRET || "secretkey";
         const changePasswordToken = jwt.sign(
             { id: user._id },
-            "secretkey",
+            jwtSecret,
             { expiresIn: "1h" }
         );
 
-        const resetLink = `http://localhost:5173/resetpassword/${changePasswordToken}`;
+       
+        const resetLink = `${frontendOrigin}/resetpassword/${changePasswordToken}`;
 
         await brevo.transactionalEmails.sendTransacEmail({
             sender: {
@@ -427,7 +436,8 @@ app.post("/resetpassword/:token", async (req, res, next) => {
 
         let decoded;
         try {
-            decoded = jwt.verify(token, "secretkey");
+            const jwtSecret = process.env.JWT_SECRET || "secretkey";
+            decoded = jwt.verify(token, jwtSecret);
         } catch (jwtErr) {
             throw new Apierror("Invalid or expired reset token", 401);
         }
@@ -448,12 +458,47 @@ app.post("/resetpassword/:token", async (req, res, next) => {
     }
 });
 
-
+// Global Error Handling Middleware (Always at the end of routes)
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    let statusCode = Number(err.statusCode || err.status);
+    if (isNaN(statusCode) || statusCode < 400 || statusCode > 599) {
+        statusCode = 500;
+    }
+
+    let message = err.message || "Internal Server Error";
+
+    if (err.name === "CastError") {
+        statusCode = 400;
+        message = `Resource not found. Invalid: ${err.path}`;
+    }
+
+    if (err.code === 11000) {
+        statusCode = 400;
+        const field = Object.keys(err.keyValue || {})[0] || "Field";
+        message = `${field} already exists`;
+    }
+
+    if (err.name === "JsonWebTokenError") {
+        statusCode = 401;
+        message = "Invalid token, please login again";
+    }
+
+    if (err.name === "TokenExpiredError") {
+        statusCode = 401;
+        message = "Token expired, please login again";
+    }
+
+    if (statusCode === 500) {
+        console.error("🔥 SERVER ERROR:", err);
+    }
+
+    return res.status(statusCode).json({
         success: false,
-        message: err.message || "Internal Server Error"
+        message
     });
 });
 
