@@ -2,12 +2,10 @@ const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
   try {
-    console.log("========== AUTH ==========");
-    console.log("COOKIES:", req.cookies);
-    console.log("TOKEN:", req.cookies?.token);
-
     const authorization = req.header("Authorization");
-    const token = authorization?.replace(/^Bearer\s+/i, "") || req.cookies?.token;
+    const headerToken = authorization?.replace(/^Bearer\s+/i, "").trim();
+    const cookieToken = req.cookies?.token?.trim();
+    const token = headerToken || cookieToken;
 
     if (!token) {
       return res.status(401).json({
@@ -15,19 +13,22 @@ const auth = (req, res, next) => {
       });
     }
 
-    if (!process.env.JWT_SECRET) {
+    const jwtSecret = process.env.JWT_SECRET?.trim();
+    if (!jwtSecret) {
       return res.status(500).json({ message: "JWT_SECRET is not configured" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    console.log("DECODED USER:", decoded);
+    const decoded = jwt.verify(token, jwtSecret);
 
     req.user = decoded;
     next();
 
   } catch (err) {
     console.error("AUTH ERROR:", err.message);
+
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired, please login again" });
+    }
 
     return res.status(401).json({
       message: "Invalid or expired token",
