@@ -448,7 +448,7 @@ app.post("/resetpassword/:token", async (req, res, next) => {
         }
 
         user.password = await bcrypt.hash(newPassword, 10);
-        await user.save();
+        await user.save({ validateBeforeSave: false });
 
         return res.status(200).json({
             message: "Password reset successfully"
