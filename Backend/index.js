@@ -146,8 +146,12 @@ app.post("/login", async (req, res, next) => {
                 role: user.role
             }
         });
-    } catch (error) {
-        next(error);
+    } } catch (error) {
+        console.error("🔥 ACTUAL LOGIN ERROR:", error); // यह Render logs में असली गलती दिखाएगा
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal Server Error"
+        });
     }
 });
 
@@ -445,16 +449,13 @@ app.post("/resetpassword/:token", async (req, res, next) => {
 });
 
 
-// app.use((err, req, res, next) => {
-//     const statusCode = err.statusCode || 500;
-//     const message = err.message || "Internal Server Error";
-
-//     return res.status(statusCode).json({
-//         success: false,
-//         message: message,
-//         stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-//     });
-// });
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        success: false,
+        message: err.message || "Internal Server Error"
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
