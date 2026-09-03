@@ -23,7 +23,7 @@ const Navbar = () => {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
-      console.log("PROFILE RESPONSE:", res.data);
+    
 
       setUser(res.data.user);
       setIsAuthenticated(true);
