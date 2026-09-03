@@ -44,7 +44,7 @@ const Login = () => {
 
 
       navigate("/Shop");
-        window.location.reload();
+       
     } catch (err) {
       const message = err.response?.data?.message || err.message || "Login failed";
        console.log(err.response?.data?.message);
