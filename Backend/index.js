@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
     res.json({
         message: 'Backend is running',
         status: 'OK'
-    });
+    });z9
 });
 
 // Contact Route
@@ -133,21 +133,29 @@ app.post("/login", async (req, res, next) => {
             throw new Apierror("Invalid Email or Password", 400);
         }
 
-        const jwtSecret = process.env.JWT_SECRET || "secretkey";
-        const token = jwt.sign(
-            { id: user._id, role: user.role },
-            jwtSecret,
-            { expiresIn: "1h" }
-        );
+       const jwtSecret = process.env.JWT_SECRET;
 
-        // Cross-domain (Render to Vercel) के लिए सही कुकी सेटिंग्स
-        const isProduction = process.env.NODE_ENV === "production" || true;
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
-            maxAge: 3600000
-        });
+if (!jwtSecret) {
+  throw new Apierror("JWT_SECRET is not configured", 500);
+}
+
+const token = jwt.sign(
+  {
+    id: user._id,
+    role: user.role
+  },
+  jwtSecret,
+  {
+    expiresIn: "1h"
+  }
+);
+
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 60 * 60 * 1000
+});
 
         return res.status(200).json({
             message: user.role === 'admin' ? "Admin Login Successful" : "Login Successful",
