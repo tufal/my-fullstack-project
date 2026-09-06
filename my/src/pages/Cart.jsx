@@ -119,8 +119,8 @@ const Cart = () => {
               width: "220px",
               height: "220px",
               objectFit: "contain",
-              marginBottom: "20px",
-              margin:"0 auto",
+              objectPosition: "center",
+              margin:"auto",
             }}
           />
 
