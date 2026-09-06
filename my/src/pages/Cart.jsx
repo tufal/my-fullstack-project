@@ -12,9 +12,12 @@ const Cart = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get("https://my-backend-l1tz.onrender.com/cartshow", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        "https://my-backend-l1tz.onrender.com/cartshow",
+        {
+          withCredentials: true,
+        }
+      );
 
       setData(Array.isArray(res.data) ? res.data : res.data.cart);
     } catch (err) {
@@ -88,8 +91,6 @@ const Cart = () => {
 
   return (
     <div className="container py-5">
-
-
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2 className="fw-bold mb-1">My Cart</h2>
@@ -104,7 +105,6 @@ const Cart = () => {
       </div>
 
       {data.length === 0 ? (
-       
         <div
           className="text-center py-5 px-3 rounded-4"
           style={{
@@ -123,9 +123,7 @@ const Cart = () => {
             }}
           />
 
-          <h4 className="fw-bold mb-2">
-            Your cart is empty
-          </h4>
+          <h4 className="fw-bold mb-2">Your cart is empty</h4>
 
           <p className="text-muted mb-0">
             Looks like you haven't added anything to your cart yet.
@@ -133,10 +131,7 @@ const Cart = () => {
         </div>
       ) : (
         <div className="row g-4">
-
-       
           <div className="col-lg-8">
-
             {data.map((item) => (
               <div
                 className="card border-0 mb-3 rounded-4"
@@ -146,10 +141,7 @@ const Cart = () => {
                 }}
               >
                 <div className="card-body p-3 p-md-4">
-
                   <div className="row align-items-center g-3">
-
-                  
                     <div className="col-4 col-md-3">
                       <div
                         style={{
@@ -178,20 +170,16 @@ const Cart = () => {
                             transition: "transform 0.3s ease",
                           }}
                           onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform =
-                              "scale(1.06)")
+                            (e.currentTarget.style.transform = "scale(1.06)")
                           }
                           onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform =
-                              "scale(1)")
+                            (e.currentTarget.style.transform = "scale(1)")
                           }
                         />
                       </div>
                     </div>
 
-               
                     <div className="col-8 col-md-5">
-
                       <h5 className="fw-bold mb-2">
                         {item.product.title}
                       </h5>
@@ -210,20 +198,17 @@ const Cart = () => {
                       </p>
 
                       <h5 className="fw-bold text-success mb-0">
-                        ₹
-                        {item.product.price.toLocaleString("en-IN")}
+                        ₹{item.product.price.toLocaleString("en-IN")}
                       </h5>
-
                     </div>
 
                     <div className="col-7 col-md-2">
-
                       <small className="text-muted d-block mb-2">
                         Quantity
                       </small>
 
                       <div
-                        className="d-flex align-items-center "
+                        className="d-flex align-items-center"
                         style={{
                           border: "1px solid #e3e3e3",
                           borderRadius: "12px",
@@ -233,7 +218,6 @@ const Cart = () => {
                           boxShadow: "inset 0 1px 2px rgba(0,0,0,0.03)",
                         }}
                       >
-
                         <button
                           onClick={() =>
                             decreaseQuantity(item.product._id)
@@ -293,45 +277,33 @@ const Cart = () => {
                         >
                           +
                         </button>
-
                       </div>
                     </div>
 
-                    {/* Subtotal + Remove */}
                     <div className="col-5 col-md-2 text-md-end">
-
-                      <small className="text-muted">
-                        Subtotal
-                      </small>
+                      <small className="text-muted">Subtotal</small>
 
                       <div className="fw-bold text-dark mb-3">
                         ₹
                         {(
-                          item.product.price *
-                          item.quantity
+                          item.product.price * item.quantity
                         ).toLocaleString("en-IN")}
                       </div>
 
                       <button
-                        onClick={() =>
-                          removeFromCart(item._id)
-                        }
+                        onClick={() => removeFromCart(item._id)}
                         className="btn btn-sm btn-outline-danger rounded-pill px-3"
                       >
                         Remove
                       </button>
-
                     </div>
-
                   </div>
                 </div>
               </div>
             ))}
-
           </div>
 
           <div className="col-lg-4">
-
             <div
               className="card border-0 rounded-4 sticky-top"
               style={{
@@ -339,55 +311,34 @@ const Cart = () => {
                 boxShadow: "0 5px 25px rgba(0,0,0,0.08)",
               }}
             >
-
               <div className="card-body p-4">
-
-                <h4 className="fw-bold mb-4">
-                  Order Summary
-                </h4>
+                <h4 className="fw-bold mb-4">Order Summary</h4>
 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">
-                    Items
-                  </span>
-
-                  <span className="fw-semibold">
-                    {data.length}
-                  </span>
+                  <span className="text-muted">Items</span>
+                  <span className="fw-semibold">{data.length}</span>
                 </div>
 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">
-                    Subtotal
-                  </span>
-
+                  <span className="text-muted">Subtotal</span>
                   <span className="fw-semibold">
                     ₹{grandTotalPrice.toLocaleString("en-IN")}
                   </span>
                 </div>
 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">
-                    Delivery
-                  </span>
-
-                  <span className="text-success fw-semibold">
-                    FREE
-                  </span>
+                  <span className="text-muted">Delivery</span>
+                  <span className="text-success fw-semibold">FREE</span>
                 </div>
 
                 <hr />
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
-
-                  <span className="fw-bold fs-5">
-                    Total
-                  </span>
+                  <span className="fw-bold fs-5">Total</span>
 
                   <span className="fw-bold fs-4 text-success">
                     ₹{grandTotalPrice.toLocaleString("en-IN")}
                   </span>
-
                 </div>
 
                 <button
@@ -406,12 +357,9 @@ const Cart = () => {
                 >
                   Proceed to Checkout →
                 </button>
-
               </div>
             </div>
-
           </div>
-
         </div>
       )}
     </div>
