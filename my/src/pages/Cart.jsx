@@ -90,11 +90,9 @@ const Cart = () => {
     }
   };
 
-  // =========================
-  // DECREASE QUANTITY
-  // =========================
+
   const decreaseQuantity = async (productId) => {
-    // Same product already update ho raha hai
+   
     if (updatingProduct === productId) {
       return;
     }
@@ -103,7 +101,6 @@ const Cart = () => {
       (item) => item.product._id === productId
     );
 
-    // Quantity 1 se neeche nahi jayegi
     if (!currentItem || currentItem.quantity <= 1) {
       return;
     }
@@ -119,7 +116,7 @@ const Cart = () => {
         }
       );
 
-      // Backend success ke baad latest data lao
+     
       await fetchCart();
     } catch (err) {
       console.log(err);
@@ -129,7 +126,7 @@ const Cart = () => {
           "Something went wrong"
       );
     } finally {
-      // Button dobara enable
+     
       setUpdatingProduct(null);
     }
   };
@@ -161,7 +158,6 @@ const Cart = () => {
         </span>
       </div>
 
-      {/* ================= EMPTY CART ================= */}
 
       {data.length === 0 ? (
         <div
