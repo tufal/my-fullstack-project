@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import image form "./assets/m.png";
 
 const Cart = () => {
   const [data, setData] = useState([]);
@@ -112,7 +113,7 @@ const Cart = () => {
           }}
         >
           <img
-            src="./assets/m.png"
+            src={image}
             alt="Empty Cart"
             style={{
               width: "220px",
