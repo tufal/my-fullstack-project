@@ -48,38 +48,90 @@ const Cart = () => {
   };
 
   const addQuantity = async (productId) => {
-    try {
-      await axios.post(
-        "https://my-backend-l1tz.onrender.com/cartadd",
-        { productId },
-        {
-          withCredentials: true,
-        }
-      );
+  
+  setData((prevData) =>
+    prevData.map((item) =>
+      item.product._id === productId
+        ? {
+            ...item,
+            quantity: item.quantity + 1,
+          }
+        : item
+    )
+  );
 
-      fetchCart();
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.message || "Something went wrong");
-    }
-  };
+  try {
+    await axios.post(
+      "https://my-backend-l1tz.onrender.com/cartadd",
+      { productId },
+      {
+        withCredentials: true,
+      }
+    );
+  } catch (err) {
+    
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.product._id === productId
+          ? {
+              ...item,
+              quantity: Math.max(1, item.quantity - 1),
+            }
+          : item
+      )
+    );
 
-  const decreaseQuantity = async (productId) => {
-    try {
-      await axios.post(
-        "https://my-backend-l1tz.onrender.com/cartdecrease",
-        { productId },
-        {
-          withCredentials: true,
-        }
-      );
+    console.log(err);
+    alert(err.response?.data?.message || "Something went wrong");
+  }
+};
 
-      fetchCart();
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.message || "Something went wrong");
-    }
-  };
+ const decreaseQuantity = async (productId) => {
+  const currentItem = data.find(
+    (item) => item.product._id === productId
+  );
+
+  if (!currentItem || currentItem.quantity <= 1) {
+    return;
+  }
+
+  
+  setData((prevData) =>
+    prevData.map((item) =>
+      item.product._id === productId
+        ? {
+            ...item,
+            quantity: item.quantity - 1,
+          }
+        : item
+    )
+  );
+
+  try {
+    await axios.post(
+      "https://my-backend-l1tz.onrender.com/cartdecrease",
+      { productId },
+      {
+        withCredentials: true,
+      }
+    );
+  } catch (err) {
+    
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.product._id === productId
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
+          : item
+      )
+    );
+
+    console.log(err);
+    alert(err.response?.data?.message || "Something went wrong");
+  }
+};
 
   if (loading) {
     return (
