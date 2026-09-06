@@ -112,7 +112,7 @@ const Cart = () => {
           }}
         >
           <img
-            src="/pages/m.png"
+            src="./assets/m.png"
             alt="Empty Cart"
             style={{
               width: "220px",
