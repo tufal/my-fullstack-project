@@ -120,6 +120,7 @@ const Cart = () => {
               height: "220px",
               objectFit: "contain",
               marginBottom: "20px",
+              margin:"0 auto",
             }}
           />
 
