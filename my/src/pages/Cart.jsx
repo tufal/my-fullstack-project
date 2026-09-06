@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import image from "../assets/m.png";
@@ -5,6 +6,9 @@ import image from "../assets/m.png";
 const Cart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Product update hone tak button disable rahega
+  const [updatingProduct, setUpdatingProduct] = useState(null);
 
   const grandTotalPrice = data.reduce((total, item) => {
     return total + item.product.price * item.quantity;
@@ -19,7 +23,11 @@ const Cart = () => {
         }
       );
 
-      setData(Array.isArray(res.data) ? res.data : res.data.cart);
+      setData(
+        Array.isArray(res.data)
+          ? res.data
+          : res.data.cart
+      );
     } catch (err) {
       console.log(err);
     } finally {
@@ -40,98 +48,91 @@ const Cart = () => {
         }
       );
 
-      fetchCart();
+      await fetchCart();
     } catch (err) {
       console.log(err);
       alert("Failed to remove item");
     }
   };
 
+  // =========================
+  // ADD QUANTITY
+  // =========================
   const addQuantity = async (productId) => {
-  
-  setData((prevData) =>
-    prevData.map((item) =>
-      item.product._id === productId
-        ? {
-            ...item,
-            quantity: item.quantity + 1,
-          }
-        : item
-    )
-  );
+    // Same product par dobara click prevent
+    if (updatingProduct === productId) {
+      return;
+    }
 
-  try {
-    await axios.post(
-      "https://my-backend-l1tz.onrender.com/cartadd",
-      { productId },
-      {
-        withCredentials: true,
-      }
-    );
-  } catch (err) {
-    
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.product._id === productId
-          ? {
-              ...item,
-              quantity: Math.max(1, item.quantity - 1),
-            }
-          : item
-      )
-    );
+    setUpdatingProduct(productId);
 
-    console.log(err);
-    alert(err.response?.data?.message || "Something went wrong");
-  }
-};
+    try {
+      await axios.post(
+        "https://my-backend-l1tz.onrender.com/cartadd",
+        { productId },
+        {
+          withCredentials: true,
+        }
+      );
 
- const decreaseQuantity = async (productId) => {
-  const currentItem = data.find(
-    (item) => item.product._id === productId
-  );
+      // Backend success ke baad latest data lao
+      await fetchCart();
+    } catch (err) {
+      console.log(err);
 
-  if (!currentItem || currentItem.quantity <= 1) {
-    return;
-  }
+      alert(
+        err.response?.data?.message ||
+          "Something went wrong"
+      );
+    } finally {
+      // Button dobara enable
+      setUpdatingProduct(null);
+    }
+  };
 
-  
-  setData((prevData) =>
-    prevData.map((item) =>
-      item.product._id === productId
-        ? {
-            ...item,
-            quantity: item.quantity - 1,
-          }
-        : item
-    )
-  );
+  // =========================
+  // DECREASE QUANTITY
+  // =========================
+  const decreaseQuantity = async (productId) => {
+    // Same product already update ho raha hai
+    if (updatingProduct === productId) {
+      return;
+    }
 
-  try {
-    await axios.post(
-      "https://my-backend-l1tz.onrender.com/cartdecrease",
-      { productId },
-      {
-        withCredentials: true,
-      }
-    );
-  } catch (err) {
-    
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.product._id === productId
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item
-      )
+    const currentItem = data.find(
+      (item) => item.product._id === productId
     );
 
-    console.log(err);
-    alert(err.response?.data?.message || "Something went wrong");
-  }
-};
+    // Quantity 1 se neeche nahi jayegi
+    if (!currentItem || currentItem.quantity <= 1) {
+      return;
+    }
+
+    setUpdatingProduct(productId);
+
+    try {
+      await axios.post(
+        "https://my-backend-l1tz.onrender.com/cartdecrease",
+        { productId },
+        {
+          withCredentials: true,
+        }
+      );
+
+      // Backend success ke baad latest data lao
+      await fetchCart();
+    } catch (err) {
+      console.log(err);
+
+      alert(
+        err.response?.data?.message ||
+          "Something went wrong"
+      );
+    } finally {
+      // Button dobara enable
+      setUpdatingProduct(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -143,9 +144,13 @@ const Cart = () => {
 
   return (
     <div className="container py-5">
+
+      {/* ================= HEADER ================= */}
+
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2 className="fw-bold mb-1">My Cart</h2>
+
           <p className="text-muted mb-0">
             Review your items before checkout
           </p>
@@ -155,6 +160,8 @@ const Cart = () => {
           {data.length} Items
         </span>
       </div>
+
+      {/* ================= EMPTY CART ================= */}
 
       {data.length === 0 ? (
         <div
@@ -172,30 +179,48 @@ const Cart = () => {
               height: "220px",
               objectFit: "contain",
               objectPosition: "center",
-              margin:"auto",
+              margin: "auto",
+              display: "block",
             }}
           />
 
-          <h4 className="fw-bold mb-2">Your cart is empty</h4>
+          <h4 className="fw-bold mb-2">
+            Your cart is empty
+          </h4>
 
           <p className="text-muted mb-0">
             Looks like you haven't added anything to your cart yet.
           </p>
         </div>
       ) : (
+
+        /* ================= CART ================= */
+
         <div className="row g-4">
+
+          {/* ================= PRODUCTS ================= */}
+
           <div className="col-lg-8">
+
             {data.map((item) => (
+
               <div
                 className="card border-0 mb-3 rounded-4"
                 key={item._id}
                 style={{
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.07)",
+                  boxShadow:
+                    "0 4px 20px rgba(0,0,0,0.07)",
                 }}
               >
+
                 <div className="card-body p-3 p-md-4">
+
                   <div className="row align-items-center g-3">
+
+                    {/* ================= IMAGE ================= */}
+
                     <div className="col-4 col-md-3">
+
                       <div
                         style={{
                           height: "150px",
@@ -209,6 +234,7 @@ const Cart = () => {
                           justifyContent: "center",
                         }}
                       >
+
                         <img
                           src={item.product.image}
                           alt={item.product.title}
@@ -220,19 +246,27 @@ const Cart = () => {
                             display: "block",
                             borderRadius: "12px",
                             background: "#fff",
-                            transition: "transform 0.3s ease",
+                            transition:
+                              "transform 0.3s ease",
                           }}
                           onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform = "scale(1.06)")
+                            (e.currentTarget.style.transform =
+                              "scale(1.06)")
                           }
                           onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform = "scale(1)")
+                            (e.currentTarget.style.transform =
+                              "scale(1)")
                           }
                         />
+
                       </div>
+
                     </div>
 
+                    {/* ================= PRODUCT INFO ================= */}
+
                     <div className="col-8 col-md-5">
+
                       <h5 className="fw-bold mb-2">
                         {item.product.title}
                       </h5>
@@ -251,11 +285,18 @@ const Cart = () => {
                       </p>
 
                       <h5 className="fw-bold text-success mb-0">
-                        ₹{item.product.price.toLocaleString("en-IN")}
+                        ₹
+                        {item.product.price.toLocaleString(
+                          "en-IN"
+                        )}
                       </h5>
+
                     </div>
 
+                    {/* ================= QUANTITY ================= */}
+
                     <div className="col-7 col-md-2">
+
                       <small className="text-muted d-block mb-2">
                         Quantity
                       </small>
@@ -268,12 +309,22 @@ const Cart = () => {
                           width: "fit-content",
                           overflow: "hidden",
                           background: "#f8f9fa",
-                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.03)",
+                          boxShadow:
+                            "inset 0 1px 2px rgba(0,0,0,0.03)",
                         }}
                       >
+
+                        {/* ================= MINUS ================= */}
+
                         <button
                           onClick={() =>
-                            decreaseQuantity(item.product._id)
+                            decreaseQuantity(
+                              item.product._id
+                            )
+                          }
+                          disabled={
+                            updatingProduct ===
+                            item.product._id
                           }
                           style={{
                             width: "36px",
@@ -286,13 +337,27 @@ const Cart = () => {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            cursor: "pointer",
+                            cursor:
+                              updatingProduct ===
+                              item.product._id
+                                ? "not-allowed"
+                                : "pointer",
                             lineHeight: 1,
                             padding: 0,
+                            opacity:
+                              updatingProduct ===
+                              item.product._id
+                                ? 0.6
+                                : 1,
                           }}
                         >
-                          −
+                          {updatingProduct ===
+                          item.product._id
+                            ? "…"
+                            : "−"}
                         </button>
+
+                        {/* ================= QUANTITY ================= */}
 
                         <span
                           style={{
@@ -308,9 +373,17 @@ const Cart = () => {
                           {item.quantity}
                         </span>
 
+                        {/* ================= PLUS ================= */}
+
                         <button
                           onClick={() =>
-                            addQuantity(item.product._id)
+                            addQuantity(
+                              item.product._id
+                            )
+                          }
+                          disabled={
+                            updatingProduct ===
+                            item.product._id
                           }
                           style={{
                             width: "36px",
@@ -323,75 +396,134 @@ const Cart = () => {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            cursor: "pointer",
+                            cursor:
+                              updatingProduct ===
+                              item.product._id
+                                ? "not-allowed"
+                                : "pointer",
                             lineHeight: 1,
                             padding: 0,
+                            opacity:
+                              updatingProduct ===
+                              item.product._id
+                                ? 0.6
+                                : 1,
                           }}
                         >
-                          +
+                          {updatingProduct ===
+                          item.product._id
+                            ? "…"
+                            : "+"}
                         </button>
+
                       </div>
+
                     </div>
 
+                    {/* ================= SUBTOTAL ================= */}
+
                     <div className="col-5 col-md-2 text-md-end">
-                      <small className="text-muted">Subtotal</small>
+
+                      <small className="text-muted">
+                        Subtotal
+                      </small>
 
                       <div className="fw-bold text-dark mb-3">
                         ₹
                         {(
-                          item.product.price * item.quantity
+                          item.product.price *
+                          item.quantity
                         ).toLocaleString("en-IN")}
                       </div>
 
                       <button
-                        onClick={() => removeFromCart(item._id)}
+                        onClick={() =>
+                          removeFromCart(item._id)
+                        }
                         className="btn btn-sm btn-outline-danger rounded-pill px-3"
                       >
                         Remove
                       </button>
+
                     </div>
+
                   </div>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
 
+          {/* ================= ORDER SUMMARY ================= */}
+
           <div className="col-lg-4">
+
             <div
               className="card border-0 rounded-4 sticky-top"
               style={{
                 top: "20px",
-                boxShadow: "0 5px 25px rgba(0,0,0,0.08)",
+                boxShadow:
+                  "0 5px 25px rgba(0,0,0,0.08)",
               }}
             >
+
               <div className="card-body p-4">
-                <h4 className="fw-bold mb-4">Order Summary</h4>
+
+                <h4 className="fw-bold mb-4">
+                  Order Summary
+                </h4>
 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">Items</span>
-                  <span className="fw-semibold">{data.length}</span>
-                </div>
+                  <span className="text-muted">
+                    Items
+                  </span>
 
-                <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">Subtotal</span>
                   <span className="fw-semibold">
-                    ₹{grandTotalPrice.toLocaleString("en-IN")}
+                    {data.length}
                   </span>
                 </div>
 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">Delivery</span>
-                  <span className="text-success fw-semibold">FREE</span>
+                  <span className="text-muted">
+                    Subtotal
+                  </span>
+
+                  <span className="fw-semibold">
+                    ₹
+                    {grandTotalPrice.toLocaleString(
+                      "en-IN"
+                    )}
+                  </span>
+                </div>
+
+                <div className="d-flex justify-content-between mb-3">
+                  <span className="text-muted">
+                    Delivery
+                  </span>
+
+                  <span className="text-success fw-semibold">
+                    FREE
+                  </span>
                 </div>
 
                 <hr />
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                  <span className="fw-bold fs-5">Total</span>
+
+                  <span className="fw-bold fs-5">
+                    Total
+                  </span>
 
                   <span className="fw-bold fs-4 text-success">
-                    ₹{grandTotalPrice.toLocaleString("en-IN")}
+                    ₹
+                    {grandTotalPrice.toLocaleString(
+                      "en-IN"
+                    )}
                   </span>
+
                 </div>
 
                 <button
@@ -410,13 +542,19 @@ const Cart = () => {
                 >
                   Proceed to Checkout →
                 </button>
+
               </div>
+
             </div>
+
           </div>
+
         </div>
       )}
+
     </div>
   );
 };
 
 export default Cart;
+
