@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import image form "./assets/m.png";
+import image from "./assets/m.png";
 
 const Cart = () => {
   const [data, setData] = useState([]);
