@@ -1,329 +1,628 @@
+
+/* =========================================================
+   CONTAINER / FORM
+========================================================= */
+
 .containt {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 18px;
+  width: min(100% - 32px, 600px);
+  margin: 50px auto;
+  padding: 32px;
 
-    width: 100%;
-    max-width: 600px;
-    margin: 60px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
-    padding: 40px;
-    background: #080808;
-    color: #fff;
+  background: #080808;
+  color: #ffffff;
 
-    border: 1px solid #292929;
-    border-radius: 20px;
+  border: 1px solid #292929;
+  border-radius: 20px;
 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
 }
 
 .containt h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 15px;
+  margin: 0 0 8px;
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.2;
+  font-weight: 700;
 }
-
-
 
 .containt label {
-    color: #f1f1f1;
-    font-weight: 500;
+  color: #f1f1f1;
+  font-size: 14px;
+  font-weight: 600;
 }
-
-/* All inputs */
 
 .containt input[type="text"],
 .containt input[type="email"],
 .containt input[type="password"],
 .containt input[type="tel"] {
-    width: 100%;
-    padding: 12px 14px;
+  width: 100%;
+  height: 46px;
 
-    background: #151515;
-    color: #fff;
+  padding: 0 14px;
 
-    border: 1px solid #3a3a3a;
-    border-radius: 10px;
+  background: #151515;
+  color: #ffffff;
 
-    outline: none;
-    box-sizing: border-box;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
 
-    transition: all 0.3s ease;
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
 .containt input::placeholder {
-    color: #8b8b8b;
+  color: #777777;
+}
+
+.containt input:hover {
+  border-color: #505050;
 }
 
 .containt input:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+  background: #181818;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
-
-/* Help text */
 
 .containt .form-text {
-    color: #8d8d8d;
-    font-size: 13px;
+  color: #8d8d8d;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 
-
+/* =========================================================
+   PRODUCT SECTION
+========================================================= */
 
 .product-section {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  width: min(100% - 32px, 1400px);
+  margin: 0 auto;
+  padding: 20px 0 50px;
 }
 
 
-/* Product heading */
+/* =========================================================
+   PRODUCT HEADING
+========================================================= */
 
 .product-heading {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  margin-bottom: 28px;
 }
 
 .product-heading h2 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #102d4f;
+  margin: 0;
+
+  color: #102d4f;
+
+  font-size: clamp(24px, 4vw, 32px);
+  line-height: 1.25;
+  font-weight: 750;
 }
 
 .product-heading p {
-    margin: 0;
-    max-width: 620px;
+  max-width: 650px;
+  margin: 0;
 
-    color: #57637d;
-    line-height: 1.6;
+  color: #57637d;
+
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 
-/* =========================
+/* =========================================================
    PRODUCT GRID
-========================= */
+========================================================= */
 
 .product-card {
-   display:flex;
-   flex-wrap: wrap;
-   flex-direction: row;
-   justify-content: center;
+  width: 100%;
 
-    gap: 25px;
-    margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 24px;
+
+  margin: 0 auto;
 }
 
 
-/* =========================
+/* =========================================================
    PRODUCT CARD
-========================= */
+========================================================= */
 
 .card5 {
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  min-width: 0;
 
-    overflow: hidden;
+  margin: 0 auto;
 
-    background: #fff;
-    border-radius: 15px;
+  display: flex;
+  flex-direction: column;
 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 
-    cursor: pointer;
+  background: #ffffff;
 
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 18px;
+
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.06),
+    0 12px 30px rgba(15, 23, 42, 0.05);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .card5:hover {
-    transform: translateY(-8px);
+  transform: translateY(-6px);
 
-    box-shadow:
-        0 15px 30px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.10),
+    0 20px 45px rgba(15, 23, 42, 0.08);
 }
 
 
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
 
+.card5 img,
+.card-img-top {
+  width: 100%;
+  height: 230px;
 
-.card5 img {
-    display: block;
+  display: block;
 
-  height: 275px;
+  padding: 18px;
 
+  object-fit: contain;
+  object-position: center;
 
-    transition: transform 0.4s ease;
+  background:
+    linear-gradient(
+      145deg,
+      #f8fafc 0%,
+      #ffffff 50%,
+      #f8fafc 100%
+    );
+
+  border-radius: 18px 18px 0 0;
+
+  transition: transform 0.3s ease;
 }
 
-.card5:hover img {
-    transform: scale(1.05);
+.card5:hover img,
+.card5:hover .card-img-top {
+  transform: scale(1.03);
 }
 
 
+/* =========================================================
+   CARD BODY
+========================================================= */
 
+.card5 .card-body {
+  padding: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  flex: 1;
+}
+
+.card5 .card-body h5 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+.card5 .card-body p {
+  margin: 0;
+
+  color: #5f6877;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.card5 .btn {
+  width: 100%;
+
+  margin-top: auto;
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #4f46e5,
+    #06b6d4
+  );
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.card5 .btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 22px rgba(79, 70, 229, 0.25);
+
+  opacity: 0.95;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
 
 .textm {
-    color: #a7addd;
-    line-height: 1.8;
+  color: #a7addd;
 
-    border-bottom: 5px solid #8f94b1;
+  line-height: 1.8;
 
-    padding-bottom: 10px;
+  padding-bottom: 10px;
+
+  border-bottom: 4px solid #8f94b1;
 }
 
 
-
+/* =========================================================
+   CARD 8
+========================================================= */
 
 .card8 {
-    display: flex;
-    flex-direction: column;
+  width: fit-content;
+  max-width: 100%;
+  height: fit-content;
 
-    width: fit-content;
-    height: fit-content;
+  display: flex;
+  flex-direction: column;
 
-    overflow: hidden;
+  overflow: hidden;
 
-    background: #fff;
+  background: #ffffff;
 
-    border-radius: 15px;
+  border-radius: 15px;
 
-    box-shadow:
-        5px 5px 10px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    5px 5px 10px rgba(0, 0, 0, 0.18);
 
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card8:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 
-    box-shadow:
-        10px 15px 25px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    10px 15px 25px rgba(0, 0, 0, 0.25);
 }
 
 
-
-
-
+/* =========================================================
+   FLEX UTILITIES
+========================================================= */
 
 .xt {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+  width: 100%;
 
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
 
-    gap: 40px;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 24px;
 }
 
-
 .mye {
-    display: flex;
-    flex-wrap: wrap;
+  width: 100%;
 
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
 
-    gap: 20px;
+  justify-content: center;
+  align-items: center;
 
-    padding: 30px;
+  gap: 20px;
+
+  padding: 24px;
 }
 
 .p {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
-
+/* =========================================================
+   BUTTON RESET
+========================================================= */
 
 button {
-    border: none;
-    cursor: pointer;
+  border: none;
+  cursor: pointer;
 
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 button:hover {
-    transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 
+/* =========================================================
+   LARGE TABLET
+========================================================= */
 
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
 
-    .product-card {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .product-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
 
 }
 
 
-
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 768px) {
 
-    .product-card {
-        grid-template-columns: 1fr;
-    }
+  .product-section {
+    width: min(100% - 24px, 700px);
+    padding-top: 15px;
+  }
 
-    .product-heading h2 {
-        font-size: 28px;
-    }
+  .product-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 
-    .containt {
-        margin-top: 40px;
-        padding: 30px;
-    }
+  .card5 {
+    max-width: none;
+    border-radius: 16px;
+  }
+
+  .card5 img,
+  .card-img-top {
+    height: 200px;
+    padding: 15px;
+  }
+
+  .card5 .card-body {
+    padding: 16px;
+  }
+
+  .card5 .card-body h5 {
+    font-size: 16px;
+  }
+
+  .card5 .card-body p {
+    font-size: 13px;
+  }
+
+  .containt {
+    width: min(100% - 24px, 600px);
+    margin: 35px auto;
+    padding: 26px 22px;
+  }
+
+  .xt {
+    justify-content: center;
+    gap: 18px;
+  }
 
 }
 
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 
-    .product-section {
-        padding: 15px;
-    }
+  .product-section {
+    width: calc(100% - 24px);
+    padding: 10px 0 35px;
+  }
 
-    .product-heading h2 {
-        font-size: 24px;
-    }
+  .product-heading {
+    margin-bottom: 20px;
+  }
 
-    .card5 img {
-        height: 180px;
-    }
+  .product-heading h2 {
+    font-size: 24px;
+  }
 
-    .containt {
-        width: 100%;
+  .product-heading p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
 
-        margin-top: 30px;
+  .product-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 
-        padding: 25px 18px;
+  .card5 {
+    width: 100%;
+    max-width: 100%;
+  }
 
-        border-radius: 15px;
-    }
+  .card5 img,
+  .card-img-top {
+    height: 210px;
+    padding: 18px;
+  }
 
-    .containt h1 {
-        font-size: 26px;
-    }
+  .card5 .card-body {
+    padding: 16px;
+  }
 
-    .mye {
-        padding: 15px;
-    }
+  .card5 .card-body h5 {
+    font-size: 17px;
+  }
 
-    .xt {
-        gap: 20px;
-        justify-content: center;
-    }
+  .card5 .card-body p {
+    font-size: 13px;
+  }
+
+  .containt {
+    width: calc(100% - 24px);
+
+    margin: 30px auto;
+
+    padding: 22px 17px;
+
+    border-radius: 16px;
+  }
+
+  .containt h1 {
+    font-size: 25px;
+  }
+
+  .containt input[type="text"],
+  .containt input[type="email"],
+  .containt input[type="password"],
+  .containt input[type="tel"] {
+    height: 45px;
+  }
+
+  .mye {
+    padding: 15px 10px;
+    gap: 15px;
+  }
+
+  .xt {
+    gap: 16px;
+  }
 
 }
+
+
+/* =========================================================
+   VERY SMALL PHONE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .product-section {
+    width: calc(100% - 18px);
+  }
+
+  .product-card {
+    gap: 14px;
+  }
+
+  .card5 img,
+  .card-img-top {
+    height: 180px;
+    padding: 14px;
+  }
+
+  .card5 .card-body {
+    padding: 14px;
+  }
+
+  .card5 .card-body h5 {
+    font-size: 16px;
+  }
+
+  .card5 .card-body p {
+    font-size: 12.5px;
+  }
+
+  .card5 .btn {
+    padding: 10px 13px;
+    font-size: 13px;
+  }
+
+  .containt {
+    width: calc(100% - 18px);
+    padding: 20px 14px;
+  }
+
+  .containt h1 {
+    font-size: 23px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .card5,
+  .card5 img,
+  .card-img-top,
+  .card8,
+  button {
+    transition: none;
+  }
+}
+
