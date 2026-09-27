@@ -51,9 +51,26 @@ const Shop = () => {
   };
 
   if (loading) {
-    return <h2>Loading...</h2>;
-  }
+  return (
+    <div className="product-grid">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div className="card5" key={index}>
+          {/* Skeleton Image */}
+          <div className="skeleton skeleton-img"></div>
 
+          {/* Skeleton Body */}
+          <div className="card-body">
+            <div className="skeleton skeleton-title"></div>
+            <div className="skeleton skeleton-text"></div>
+            <div className="skeleton skeleton-text-short"></div>
+            <div className="skeleton skeleton-small"></div>
+            <div className="skeleton skeleton-btn"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
   if (error) {
     return (
       <div>
