@@ -1004,167 +1004,169 @@ img {
    PRODUCT CARD
 ========================================================= */
 
+/* =========================================================
+   PRODUCT CARD (UPDATED & PERFECTED)
+========================================================= */
+
 .product-card {
   min-width: 0;
-
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Sabhi cards barabar height ke rahenge */
   overflow: hidden;
 
-  background: #fff;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
 
-  border:
-    1px solid rgba(0, 0, 0, 0.035);
-
-  border-radius: 17px;
-
-  box-shadow:
-    0 3px 15px rgba(0, 0, 0, 0.035);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 
 .dark .product-card {
-  background: #1a1b29;
-  border-color: rgba(255, 255, 255, 0.04);
+  background: #181926;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .product-card:hover {
   transform: translateY(-4px);
+  border-color: rgba(108, 99, 255, 0.25);
+  box-shadow: 0 12px 30px rgba(108, 99, 255, 0.12);
+}
 
-  box-shadow:
-    0 14px 40px rgba(0, 0, 0, 0.08);
+.dark .product-card:hover {
+  border-color: rgba(108, 99, 255, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 
-/* Image */
+/* Image Container */
 
 .product-image {
   position: relative;
-
-  height: 185px;
+  width: 100%;
+  height: 190px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 18px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #f8f9fb,
-      #eef0f3
-    );
+  padding: 16px;
+  background: #f8f9fc;
+  overflow: hidden;
 }
 
 .dark .product-image {
-  background:
-    linear-gradient(
-      145deg,
-      #20212f,
-      #151621
-    );
+  background: #12131d;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-
   object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.04);
 }
 
 .product-image .placeholder-icon {
-  font-size: 40px;
-  opacity: 0.28;
+  font-size: 42px;
+  opacity: 0.35;
+  color: #71717a;
 }
 
 .category-tag {
   position: absolute;
+  top: 10px;
+  right: 10px;
 
-  top: 12px;
-  right: 12px;
-
-  max-width: 110px;
-
-  padding: 4px 11px;
+  max-width: 120px;
+  padding: 4px 10px;
 
   border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  color: #5b50e6;
 
-  background:
-    rgba(255, 255, 255, 0.94);
-
-  color: #6c63ff;
-
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  box-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .dark .category-tag {
-  background: #292a3d;
+  background: rgba(32, 33, 50, 0.95);
   color: #a5a1ff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 
-/* Product body */
+/* Product Body */
 
 .product-body {
-  padding: 17px 18px 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Body flex-grow karega taaki buttons barabar line mein aayein */
 }
 
 .product-body h4 {
-  margin-bottom: 4px;
-
+  margin-bottom: 6px;
   font-size: 15px;
-
-  font-weight: 750;
+  font-weight: 700;
+  color: #18181b;
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.dark .product-body h4 {
+  color: #f4f4f5;
+}
+
 .product-body p {
-  height: 37px;
+  min-height: 36px;
+  margin-bottom: 12px;
 
-  margin-bottom: 13px;
-
-  color: #888;
-
-  font-size: 11px;
-  line-height: 1.65;
-
-  overflow: hidden;
+  color: #71717a;
+  font-size: 12px;
+  line-height: 1.5;
 
   display: -webkit-box;
-  -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dark .product-body p {
+  color: #a1a1aa;
 }
 
 
-/* Product meta */
+/* Product Meta (Price & Stock) */
 
 .product-meta {
   display: flex;
-
+  align-items: center;
   justify-content: space-between;
 
-  gap: 10px;
+  gap: 12px;
+  padding: 12px 0;
+  margin-top: auto; /* Isse meta aur buttons hamesha card ke bottom par lock rahenge */
 
-  padding: 11px 0;
-
-  border-top:
-    1px solid rgba(0, 0, 0, 0.055);
-
-  border-bottom:
-    1px solid rgba(0, 0, 0, 0.055);
+  border-top: 1px solid #f1f2f4;
+  border-bottom: 1px solid #f1f2f4;
 }
 
 .dark .product-meta {
@@ -1172,7 +1174,6 @@ img {
 }
 
 .product-meta > div {
-  flex: 1;
   min-width: 0;
 }
 
@@ -1182,126 +1183,138 @@ img {
 
 .product-meta small {
   display: block;
-
-  color: #999;
-
-  font-size: 7px;
+  color: #a1a1aa;
+  font-size: 9px;
   font-weight: 800;
-
   letter-spacing: 0.6px;
-
   text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.dark .product-meta small {
+  color: #71717a;
 }
 
 .product-meta strong {
   display: block;
-
-  margin-top: 2px;
-
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
+  color: #09090b;
+}
+
+.dark .product-meta strong {
+  color: #fafafa;
 }
 
 
-/* Stock */
+/* Stock Badges */
 
 .stock {
   display: inline-block;
-
-  padding: 3px 10px;
-
-  border-radius: 20px;
-
-  font-size: 9px;
-  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
 }
 
 .stock.in {
-  background: #d1fae5;
-  color: #065f46;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
 }
 
 .stock.out {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
 .dark .stock.in {
-  background: #064e3b;
-  color: #a7f3d0;
+  background: rgba(5, 150, 105, 0.15);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.25);
 }
 
 .dark .stock.out {
-  background: #7f1d1d;
-  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.25);
 }
 
 
-/* Actions */
+/* Action Buttons */
 
 .product-actions {
   display: flex;
-
-  gap: 8px;
-
-  margin-top: 13px;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .edit-btn,
 .delete-btn {
-  min-height: 40px;
-
-  display: flex;
+  min-height: 38px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  border:
-    1px solid rgba(0, 0, 0, 0.07);
-
   border-radius: 9px;
-
-  background: #fff;
-
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .edit-btn {
   flex: 1;
+  background: rgba(108, 99, 255, 0.08);
   color: #6c63ff;
-}
-
-.delete-btn {
-  width: 42px;
-  color: #dc2626;
-}
-
-.dark .edit-btn,
-.dark .delete-btn {
-  background: #1a1b29;
-  border-color: rgba(255, 255, 255, 0.07);
-  color: #ddd;
+  border: 1px solid rgba(108, 99, 255, 0.2);
 }
 
 .edit-btn:hover {
   background: #6c63ff;
-  color: #fff;
+  color: #ffffff;
   border-color: #6c63ff;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+.delete-btn {
+  width: 40px;
+  min-width: 40px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .delete-btn:hover {
   background: #dc2626;
-  color: #fff;
+  color: #ffffff;
   border-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
+.dark .edit-btn {
+  background: rgba(108, 99, 255, 0.12);
+  color: #8f88ff;
+  border-color: rgba(108, 99, 255, 0.25);
+}
+
+.dark .edit-btn:hover {
+  background: #6c63ff;
+  color: #fff;
+}
+
+.dark .delete-btn {
+  background: rgba(220, 38, 38, 0.12);
+  color: #f87171;
+  border-color: rgba(220, 38, 38, 0.25);
+}
+
+.dark .delete-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
 
 /* =========================================================
    EMPTY
