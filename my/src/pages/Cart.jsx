@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import image from "../assets/m.png";
 
@@ -36,7 +36,27 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCart();
+    let active = true;
+
+    axios
+      .get("https://my-backend-l1tz.onrender.com/cartshow", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        if (active) {
+          setData(Array.isArray(response.data) ? response.data : response.data.cart);
+        }
+      })
+      .catch((error) => {
+        console.error("Cart loading failed:", error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const removeFromCart = async (cartId) => {

@@ -1,93 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Lists from '../components/Lists';
-import "./style.css";
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import Lists from "../components/Lists";
+import { ProductCardSkeleton } from "../components/ProductCard";
+import useCartApi from "../hooks/useCartApi";
+import "./Home.css";
 
-const Shop = () => {
+const API_URL = "https://my-backend-l1tz.onrender.com";
+
+export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const { cartItems, busyProduct, error: cartError, addToCart, decreaseQuantity } =
+    useCartApi();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
     try {
-      setLoading(true);
-      setError(false);
-
-      const response = await axios.get(
-        "https://my-backend-l1tz.onrender.com/products"
-      );
-
+      const response = await axios.get(`${API_URL}/products`);
+      if (!Array.isArray(response.data?.products)) {
+        throw new Error("Unexpected products response");
+      }
       setProducts(response.data.products);
-    } catch (err) {
-      console.error(err);
-      setError(true);
+    } catch (requestError) {
+      console.error("Product loading failed:", requestError);
+      setError("Products could not be loaded. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchProducts();
   }, []);
 
-  const addToCart = async (productId) => {
-    try {
-      const res = await axios.post(
-        "https://my-backend-l1tz.onrender.com/cartadd",
-        { productId },
-        {
-          withCredentials: true,
+  useEffect(() => {
+    let active = true;
+
+    axios
+      .get(`${API_URL}/products`)
+      .then((response) => {
+        if (!Array.isArray(response.data?.products)) {
+          throw new Error("Unexpected products response");
         }
-      );
+        if (active) setProducts(response.data.products);
+      })
+      .catch((requestError) => {
+        console.error("Product loading failed:", requestError);
+        if (active) setError("Products could not be loaded. Please try again.");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
 
-      alert(res.data.message);
-      navigate("/Cart");
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.message || "Something went wrong");
-    }
-  };
+    return () => {
+      active = false;
+    };
+  }, []);
 
-  if (loading) {
   return (
-    <div className="product-grid">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div className="card5" key={index}>
-          {/* Skeleton Image */}
-          <div className="skeleton skeleton-img"></div>
-
-          {/* Skeleton Body */}
-          <div className="card-body">
-            <div className="skeleton skeleton-title"></div>
-            <div className="skeleton skeleton-text"></div>
-            <div className="skeleton skeleton-text-short"></div>
-            <div className="skeleton skeleton-small"></div>
-            <div className="skeleton skeleton-btn"></div>
-          </div>
+    <main className="home-page home-catalog">
+      <div className="home-section-heading">
+        <div>
+          <span className="home-kicker">THE FULL COLLECTION</span>
+          <h2>Shop</h2>
         </div>
-      ))}
-    </div>
+      </div>
+
+      {cartError && <p className="home-notice" role="status">{cartError}</p>}
+
+      {error ? (
+        <div className="home-empty" role="alert">
+          <p>{error}</p>
+          <button type="button" onClick={fetchProducts}>Try again</button>
+        </div>
+      ) : loading ? (
+        <div className="home-product-grid" aria-label="Loading products">
+          {Array.from({ length: 8 }, (_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : products.length > 0 ? (
+        <Lists
+          data={products}
+          cartItems={cartItems}
+          busyProduct={busyProduct}
+          addToCart={addToCart}
+          decreaseQuantity={decreaseQuantity}
+        />
+      ) : (
+        <div className="home-empty">No products are available right now.</div>
+      )}
+    </main>
   );
 }
-  if (error) {
-    return (
-      <div>
-        <h2>No Internet Connection</h2>
-        <button onClick={fetchProducts}>Retry</button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="d-flex flex-wrap gap-4 justify-content-center">
-      <Lists
-        data={products}
-        addToCart={addToCart}
-      />
-    </div>
-  );
-};
-
-export default Shop;

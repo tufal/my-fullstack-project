@@ -1,9 +1,7 @@
-import React, { createRef } from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const Register = () => {
-  const inputref = createRef();
   const navigate = useNavigate();
   const [Form, setForm] = useState({
     Name: "",

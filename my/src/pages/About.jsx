@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +23,29 @@ const About = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    let active = true;
+
+    axios
+      .get("https://my-backend-l1tz.onrender.com/products")
+      .then((response) => {
+        if (active) {
+          setProducts(response.data.products);
+          setError(false);
+        }
+      })
+      .catch((requestError) => {
+        console.error(
+          requestError.response?.data?.message || requestError.message
+        );
+        if (active) setError(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   if (loading) {

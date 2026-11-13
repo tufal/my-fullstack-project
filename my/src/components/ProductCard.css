@@ -1,0 +1,239 @@
+.store-card {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e8eaf0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgb(20 30 55 / 5%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.store-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgb(20 30 55 / 11%);
+}
+
+.store-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 4.8;
+  background: #f4f6f9;
+}
+
+.store-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 250ms ease;
+}
+
+.store-card:hover .store-card__image {
+  transform: scale(1.04);
+}
+
+.store-card__wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 92%);
+  color: #475569;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.store-card__wishlist.is-active {
+  color: #e11d48;
+}
+
+.store-card__stock-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.store-card__stock-badge--out {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.store-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.store-card__category {
+  color: #64748b;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.store-card__title {
+  display: -webkit-box;
+  min-height: 2.8em;
+  margin: 6px 0;
+  overflow: hidden;
+  color: #172033;
+  font-size: 16px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.store-card__description {
+  display: -webkit-box;
+  min-height: 2.8em;
+  margin: 0 0 12px;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.store-card__price {
+  margin: 0 0 14px;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.store-card__add,
+.store-card__stepper {
+  width: 100%;
+  min-height: 42px;
+  margin-top: auto;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+}
+
+.store-card__add {
+  border: 0;
+  background: #172033;
+  color: #fff;
+  cursor: pointer;
+}
+
+.store-card__add:hover:not(:disabled) {
+  transform: none;
+  background: #33466d;
+}
+
+.store-card__add:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.store-card__stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid #d8deea;
+}
+
+.store-card__stepper button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: #f1f5f9;
+  color: #172033;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.store-card__stepper button:hover {
+  transform: none;
+}
+
+.store-card__stepper button:disabled {
+  color: #aab3c1;
+  cursor: not-allowed;
+}
+
+.store-card--skeleton .store-card__body {
+  gap: 0;
+}
+
+.store-skeleton {
+  background: linear-gradient(90deg, #eef1f5 25%, #f8fafc 50%, #eef1f5 75%);
+  background-size: 200% 100%;
+  animation: store-shimmer 1.4s infinite linear;
+}
+
+.store-card--skeleton .store-card__media {
+  min-height: 0;
+}
+
+.store-skeleton--category {
+  width: 35%;
+  height: 14px;
+  border-radius: 6px;
+}
+
+.store-skeleton--title {
+  width: 75%;
+  height: 44px;
+  margin: 6px 0;
+  border-radius: 6px;
+}
+
+.store-skeleton--description {
+  width: 100%;
+  height: 36px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.store-skeleton--price {
+  width: 40%;
+  height: 22px;
+  margin: 0 0 14px;
+  border-radius: 6px;
+}
+
+.store-skeleton--button {
+  width: 100%;
+  height: 42px;
+  margin-top: auto;
+  border-radius: 10px;
+}
+
+@keyframes store-shimmer {
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store-card,
+  .store-card__image {
+    transition: none;
+  }
+
+  .store-skeleton {
+    animation: none;
+  }
+}

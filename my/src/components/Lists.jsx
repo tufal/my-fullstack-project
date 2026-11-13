@@ -1,39 +1,31 @@
-import React from "react";
-import "./list.css";
+import ProductCard from "./ProductCard";
 
-const Lists = ({ data, addToCart }) => {
+export default function Lists({
+  data,
+  cartItems = [],
+  busyProduct,
+  addToCart,
+  decreaseQuantity,
+}) {
   return (
-    <>
-      {data.map((item) => (
-        <div
-          key={item._id}
-          className="card5"
-        >
-          <img
-            src={item.image}
-            className="card-img-top"
-            alt={item.title}
+    <div className="home-product-grid">
+      {data.map((item) => {
+        const quantity =
+          cartItems.find(
+            (entry) => String(entry.product?._id) === String(item._id)
+          )?.quantity || 0;
+
+        return (
+          <ProductCard
+            key={item._id}
+            item={item}
+            quantity={quantity}
+            busy={String(busyProduct) === String(item._id)}
+            onAdd={addToCart}
+            onDecrease={decreaseQuantity}
           />
-
-          <div className="card-body">
-            <h5>{item.title}</h5>
-            <p>{item.description}</p>
-            <p>Price: ₹{item.price}</p>
-            <p>Stock: {item.stock}</p>
-            <p>Category: {item.category}</p>
-
-            <button
-              className="btn btn-primary"
-              onClick={() => addToCart(item._id)}
-              
-            >
-              Add To Cart
-            </button>
-          </div>
-        </div>
-      ))}
-    </>
+        );
+      })}
+    </div>
   );
-};
-
-export default Lists;
+}

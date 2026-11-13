@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -16,40 +16,38 @@ const Navbar = () => {
   // Mobile navbar toggle state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const checkUser = useCallback(async () => {
-    try {
-     
+  useEffect(() => {
+    let active = true;
+    const token = localStorage.getItem("authToken");
 
-      const token = localStorage.getItem("authToken");
-
-      const res = await axios.get(`${API_URL}/profile`, {
+    axios
+      .get(`${API_URL}/profile`, {
         withCredentials: true,
-        headers: token
-          ? { Authorization: `Bearer ${token}` }
-          : undefined,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      })
+      .then((response) => {
+        if (!active) return;
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        setIsAdmin(response.data.admin === true);
+      })
+      .catch((error) => {
+        console.error(
+          "PROFILE ERROR:",
+          error.response?.status,
+          error.response?.data
+        );
+        if (!active) return;
+        setUser(null);
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+        localStorage.removeItem("authToken");
       });
 
-      setUser(res.data.user);
-      setIsAuthenticated(true);
-      setIsAdmin(res.data.admin === true);
-    } catch (err) {
-      console.log(
-        "PROFILE ERROR:",
-        err.response?.status,
-        err.response?.data
-      );
-
-      setUser(null);
-      setIsAuthenticated(false);
-      setIsAdmin(false);
-
-      localStorage.removeItem("authToken");
-    }
-  }, []);
-
-  useEffect(() => {
-    checkUser();
-  }, [checkUser, location.pathname]);
+    return () => {
+      active = false;
+    };
+  }, [location.pathname]);
 
   // Navigation click ke baad mobile menu close
   const handleNavClick = () => {

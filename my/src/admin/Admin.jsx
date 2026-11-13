@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import axios from "axios";
 import "./Admin.css";
 
@@ -20,16 +20,40 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "success" });
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode");
+    return saved ? JSON.parse(saved) : false;
+  });
 
   const isEditing = editId !== null;
 
-  useEffect(() => {
-    loadProducts();
-    const saved = localStorage.getItem("darkMode");
-    if (saved) setDarkMode(JSON.parse(saved));
+  const showMessage = useCallback((text, type = "success") => {
+    setMessage({ text, type });
+    window.setTimeout(() => {
+      setMessage({ text: "", type: "success" });
+    }, 3000);
   }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    axios
+      .get(`${API}/products`)
+      .then((response) => {
+        if (active) setProducts(response.data.products || []);
+      })
+      .catch(() => {
+        if (active) showMessage("Failed to load products", "error");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [showMessage]);
 
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
@@ -40,16 +64,11 @@ const Admin = () => {
     try {
       const response = await axios.get(`${API}/products`);
       setProducts(response.data.products || []);
-    } catch (error) {
+    } catch {
       showMessage("Failed to load products", "error");
     } finally {
       setLoading(false);
     }
-  };
-
-  const showMessage = (text, type = "success") => {
-    setMessage(text);
-    setTimeout(() => setMessage(""), 3000);
   };
 
   const resetForm = () => {
@@ -131,7 +150,7 @@ const Admin = () => {
       });
       await loadProducts();
       showMessage("🗑️ Product deleted!");
-    } catch (error) {
+    } catch {
       showMessage("❌ Failed to delete product", "error");
     } finally {
       setLoading(false);
@@ -214,9 +233,9 @@ const Admin = () => {
 
         <div className="content">
           {/* Toast Message */}
-          {message && (
-            <div className={`toast ${message.includes("error") || message.includes("❌") ? "error" : ""}`}>
-              {message}
+          {message.text && (
+            <div className={`toast ${message.type === "error" ? "error" : ""}`}>
+              {message.text}
             </div>
           )}
 
