@@ -21,7 +21,7 @@ const Banner = () => {
                 </p>
                 <div className="banner-actions">
                     <Button title="Shop Now" className="btn-primary btn-large" onClick={() => navigate("/shop")} />
-                    <Button title="View Collection" className="btn-outline-success btn-secondary" onClick={() => navigate("/collection")} />
+                    <Button title="View Collection" className="btn-outline-success btn-secondary" onClick={() => navigate("/About")} />
                 </div>
             </div>
             <div className="banner-media">
